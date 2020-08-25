@@ -1,0 +1,5 @@
+br/com/facedetect/objects/Size.class
+br/com/facedetect/Application.class
+br/com/facedetect/objects/Face.class
+br/com/facedetect/objects/Size$SizeBuilder.class
+br/com/facedetect/objects/Face$FaceBuilder.class
