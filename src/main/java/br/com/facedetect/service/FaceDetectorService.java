@@ -12,8 +12,12 @@ public class FaceDetectorService {
     private static int narizY;
 
     private static int leftNose;
+    private static int leftNoseOriginal;
+    private static int leftMouthOriginal;
 
     private static int mouthY;
+    private static int mouthX;
+    private static int leftMouth;
 
     private static int eyeX;
     private static int distanceEye;
@@ -30,14 +34,34 @@ public class FaceDetectorService {
     
     private static int olhoXOriginal;
     private static int olhoYOriginal;
+    private static int narizXOriginal;
+    private static int narizYOriginal;
+    private static int mouthXOriginal;
+    private static int mouthYOriginal;
 
     static {
 
         Size build = Size.builder().x(2).y(2).build();
         Size build2 = Size.builder().x(4).y(2).build();
-        Face face = Face.builder().eye(build).nose(build).mouth(build2).topNose(3)
-                .downNose(1).leftNose(2).distanceEye(2).build();
+        Face face = Face.builder().eye(build)
+        		                  .nose(build)
+        		                  .mouth(build2)
+        		                  .leftMouth(1)
+        		                  .topNose(3)
+                                  .downNose(1)
+                                  .leftNose(2)
+                                  .distanceEye(2)
+                                  .build();
 
+        // 110011
+        // 110011
+        // 000000
+        // 001100
+        // 001100
+        // 000000
+        // 1111
+        // 1111
+        
         topNose = face.getTopNose();
         narizY = face.getNose().getY();
         narizX = face.getNose().getX();
@@ -45,7 +69,8 @@ public class FaceDetectorService {
         mouthY = face.getMouth().getY();
 
         leftNose = face.getLeftNose();
-
+        leftNoseOriginal = face.getLeftNose();
+        
         eyeX = 2 * face.getEye().getX();
         distanceEye = face.getDistanceEye();
         distanceEyeOriginal = face.getDistanceEye();
@@ -55,6 +80,11 @@ public class FaceDetectorService {
 
         olhoXOriginal = face.getEye().getX();
         olhoYOriginal = face.getEye().getY();
+        narizXOriginal = face.getNose().getX();
+        narizYOriginal = face.getNose().getY();
+        mouthXOriginal = face.getMouth().getX();
+        mouthYOriginal = face.getMouth().getY();
+        leftMouthOriginal = face.getLeftMouth();
         
         olhoXLeft = face.getEye().getX();
         olhoXRight = face.getEye().getX();
@@ -76,11 +106,7 @@ public class FaceDetectorService {
                 } else if(topNose == 0 && downNose > 0) {
                     verificarNariz();
                 } else if(topNose == 0 && downNose == 0) {
-                    print("1");
-                } else if(olhoYLeft == 0 && topNose > 0 ){
-                    print("0");
-                } else if(topNose == 0 && downNose > 0){
-                    print("0");
+                	verificarBoca();
                 }
             }
             if(olhoYLeft > 0) {
@@ -93,21 +119,51 @@ public class FaceDetectorService {
             	olhoXRight = olhoYOriginal;
             	distanceEye = distanceEyeOriginal;
             }
+            if(olhoYLeft == 0 && narizY > 0) {
+            	narizY--;
+            	narizX = narizXOriginal;
+            	leftNose = leftNoseOriginal;
+            } else if(olhoYLeft == 0 && narizY == 0 && downNose > 0) {
+            	downNose--;
+            }
+            if((olhoYLeft == 0 && narizY == 0) 
+            		&& (downNose == 0 && mouthY > 0)) {
+            	mouthY--;
+            	mouthX = mouthXOriginal;
+            	leftMouth = leftMouthOriginal;
+            }
             if(topNose > 0) topNose--;
-            if(topNose == 0 && downNose > 0) downNose--;
+            //if(topNose == 0 && downNose > 0) downNose--;
             print("\n");
         }
     }
 
+    private static void verificarBoca() {
+    	if(leftMouth > 0) {
+    		print("0");
+    		leftMouth--;
+    	} else if (leftMouth == 0 && mouthX > 0) {
+    		print("1");
+    		mouthX--;
+    	} else if (leftMouth == 0 && mouthX == 0) {
+    		print("0");
+    		//mouthX--;
+    	}
+    	
+    }
+    
     private static void verificarNariz() {
         if(leftNose == 0 && narizX > 0) {
             print("1");
             narizX--;
-            if(narizX == 0) narizY--;
+          //  if(narizX == 0) narizY--;
         }
-        if(leftNose > 0 ) {
+        else if(leftNose > 0 ) {
             print("0");
             leftNose--;
+        }
+        else if(leftNose == 0 && narizX == 0) {
+        	print("0");
         }
     }
 

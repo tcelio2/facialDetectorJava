@@ -11,6 +11,7 @@ public class Face {
     private Size eye;
     private Size nose;
     private Size mouth;
+    private int leftMouth;
     private int topNose;
     private int downNose;
     private int leftNose;
